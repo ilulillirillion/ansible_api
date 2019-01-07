@@ -1,0 +1,37 @@
+---
+# file: .../ansible_api/core_config.yaml
+
+
+testkeycore1: testval1
+testkeycore2: testval2
+testkey1: should_be_overwritten
+simple_logging: true
+
+logging_streams:
+  - nickname: 'default stdout logging'
+    enabled: true
+    output_path: stdout
+    formatting:
+    level: WARNING
+
+  - nickname: 'default file logging'
+    enabled: true
+    output_path: ansible_api.log
+    formatting:
+    level: WARNING
+
+
+logging:
+  enabled:
+  core_streams:
+    enabled:
+    stdout_enabled:
+    file_logging_enabled:
+    level: 
+    formatting:
+    logfile:
+  custom_streams:
+    enabled: false
+    streams:
+      - nickname: 'Default standard-out log stream'
+        

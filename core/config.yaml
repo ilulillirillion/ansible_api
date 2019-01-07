@@ -1,0 +1,16 @@
+---
+# file: .../ansible_api/core/config.yaml
+
+
+logging:
+  enabled: true
+  core:
+    enabled: true
+    stdout_enabled: true
+    file_logging_enabled: true
+    level: WARN
+    formatting:
+    logfile: ansible_api.log
+  custom:
+    enabled: false
+    streams:

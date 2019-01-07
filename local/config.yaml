@@ -1,0 +1,7 @@
+---
+# .../ansible_api/local/config.yaml
+
+
+authentication_token: 5992aa0828f72860a158f88cc7f4179f3c209e2f69b084e0 
+
+logging:
