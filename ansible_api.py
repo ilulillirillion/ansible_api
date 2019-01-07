@@ -46,7 +46,8 @@ ANSIBLE_INVENTORY_PATH = os.getenv('{}_ANSIBLE_INVENTORY_PATH'.format(APP_NAME.u
 ANSIBLE_PLAYBOOK_PATH = os.getenv('{}_ANSIBLE_PLAYBOOK_PATH'.format(APP_NAME.upper().replace(' ', '_')))
 
 # Script to use when adding hosts
-ADD_HOST_SCRIPT = '/etc/ansible/scripts/inventory_generator_v2/add_host.py'
+#ADD_HOST_SCRIPT = '/etc/ansible/scripts/inventory_generator_v2/add_host.py'
+ADD_HOST_SCRIPT = 'scripts/add_host.py'
 
 
 # Set the name of the 
@@ -232,45 +233,45 @@ def setupLogger():
 
 
 # FIXME: deprecated -- remove -- do not use
-def setupAdvancedLogger():
-  logger = logging.getLogger()
-  for stream in configuration['logging_streams']:
-    if stream['enabled']:
- 
-      ## Sanity-check vars
-      # output_path
-      output_path = stream['output_path']
-      if output_path is None:
-        output_path = 'stdout'
-      # formatting
-      formatting = stream['formatting']
-      if formatting is None:
-        formatting = ''
-      # level
-      level = stream['level']
-      if level is None:
-        level = 'DEBUG'
-      if isinstance(level, str):
-        level = logging.getLevelName(level.upper())
- 
-      # Set output path
-      if output_path == 'stdout':
-        handler = logging.StreamHandler(getattr(sys, output_path))
-      else:
-        handler = logging.FileHandler(output_path)
-
-      # Set formatting
-      handler.setFormatter(logging.Formatter(formatting))
-
-      # Set level
-      handler.setLevel(level)
-
-      # Add handler to logger
-      logger.addHandler(handler)
-
-  # Apply root logger level and return logger object
-  logger.setLevel(configuration['logger_root_level'])
-  return logger
+#def setupAdvancedLogger():
+#  logger = logging.getLogger()
+#  for stream in configuration['logging_streams']:
+#    if stream['enabled']:
+# 
+#      ## Sanity-check vars
+#      # output_path
+#      output_path = stream['output_path']
+#      if output_path is None:
+#        output_path = 'stdout'
+#      # formatting
+#      formatting = stream['formatting']
+#      if formatting is None:
+#        formatting = ''
+#      # level
+#      level = stream['level']
+#      if level is None:
+#        level = 'DEBUG'
+#      if isinstance(level, str):
+#        level = logging.getLevelName(level.upper())
+# 
+#      # Set output path
+#      if output_path == 'stdout':
+#        handler = logging.StreamHandler(getattr(sys, output_path))
+#      else:
+#        handler = logging.FileHandler(output_path)
+#
+#      # Set formatting
+#      handler.setFormatter(logging.Formatter(formatting))
+#
+#      # Set level
+#      handler.setLevel(level)
+#
+#      # Add handler to logger
+#      logger.addHandler(handler)
+#
+#  # Apply root logger level and return logger object
+#  logger.setLevel(configuration['logger_root_level'])
+#  return logger
 
 
 
@@ -322,7 +323,8 @@ def parseConfiguration():
     print('trying config ref: {}'.format(configuration_reference))
     #configuration = {**configuration, **readYAML(configuration_reference)}
     #configuration = recursivelyMergeDictionaries(configuration, readYAML(configuration_reference))
-    configuration = recursivelyMergeDictionaries(configuration, configuration_reference)
+    #configuration = recursivelyMergeDictionaries(configuration, configuration_reference)
+    configuration = recursivelyMerge(configuration, configuration_reference)
   print('final config: {}'.format(configuration))
   return configuration
 
@@ -358,6 +360,36 @@ def recursivelyMergeDictionaries(*args):
         print('key match found: {}'.format(key))
       else:
         merged_dictionary[key] = dictionary[key]
+  return merged_dictionary
+
+
+def recursivelyMerge(*args):
+  merged_dictionary = {}
+  dictionaries = args
+  print('TEST - dictionaries: {}'.format(dictionaries))
+  for dictionary in dictionaries:
+    if not isinstance(dictionary, dict):
+      print('??? - expected dictionary but got something else: {} - trying fix...'.format(dictionary))
+      dictionary = {}
+
+    for key, value in dictionary.items():
+      
+      if (key in merged_dictionary and
+          #isinstance(value, dict)):
+          (isinstance(value, dict) or
+          isinstance(merged_dictionary[key], dict))):
+      #if key in merged_dictionary:
+      #  print('TEST - key in merged dict" {}'.format(key))
+      #  if isinstance(value, dict):
+        print('TEST - value is dict: {}'.format(value))
+        print('TEST - match found')
+        merged_dictionary[key] = recursivelyMerge(merged_dictionary[key], dictionary[key])
+        #else:
+        #  print('TEST - alt')
+        #  merged_dictionary[key] = dictionary[key]
+      else:
+        merged_dictionary[key] = dictionary[key]
+  print('TEST - about to return merged dict: {}'.format(merged_dictionary))
   return merged_dictionary
     
     
@@ -439,8 +471,8 @@ if __name__ == '__main__':
     #print('Token: %s' % token)
     print('Token: %s' % configuration['authentication_token'])
     #AUTHENTICATION_TOKEN = token
-  if ANSIBLE_PLAYBOOK_PATH is None:
-    raise Exception('ANSIBLE_PLAYBOOK_PATH is not defined!')
-  if ANSIBLE_INVENTORY_PATH is None:
-    raise Exception('ANSIBLE_INVENTORY_PATH is not defined!')
+  #if ANSIBLE_PLAYBOOK_PATH is None:
+  #  raise Exception('ANSIBLE_PLAYBOOK_PATH is not defined!')
+  #if ANSIBLE_INVENTORY_PATH is None:
+  #  raise Exception('ANSIBLE_INVENTORY_PATH is not defined!')
   app.run()
