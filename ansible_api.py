@@ -37,17 +37,17 @@ AUTHENTICATION_TOKEN = os.getenv('{}_AUTHENTICATION_TOKEN'.format(APP_NAME.upper
 CLIENT_AUTH_TIMEOUT = 24
 
 # Location of the Ansible hosts file
-INVENTORY_HOSTS_FILE = os.getenv('{}_INVENTORY_HOSTS_FILE'.format(APP_NAME.upper().replace(' ', '_')))
+#INVENTORY_HOSTS_FILE = os.getenv('{}_INVENTORY_HOSTS_FILE'.format(APP_NAME.upper().replace(' ', '_')))
 
 # Location for Ansible inventory path
-ANSIBLE_INVENTORY_PATH = os.getenv('{}_ANSIBLE_INVENTORY_PATH'.format(APP_NAME.upper().replace(' ', '_')))
+#ANSIBLE_INVENTORY_PATH = os.getenv('{}_ANSIBLE_INVENTORY_PATH'.format(APP_NAME.upper().replace(' ', '_')))
 
 # Location of playbook for Ansible to run
-ANSIBLE_PLAYBOOK_PATH = os.getenv('{}_ANSIBLE_PLAYBOOK_PATH'.format(APP_NAME.upper().replace(' ', '_')))
+#ANSIBLE_PLAYBOOK_PATH = os.getenv('{}_ANSIBLE_PLAYBOOK_PATH'.format(APP_NAME.upper().replace(' ', '_')))
 
 # Script to use when adding hosts
 #ADD_HOST_SCRIPT = '/etc/ansible/scripts/inventory_generator_v2/add_host.py'
-ADD_HOST_SCRIPT = 'scripts/add_host.py'
+ADD_HOST_SCRIPT = '/etc/ansible/ansible_api/core/scripts/add_host.py'
 
 
 # Set the name of the 
@@ -415,7 +415,9 @@ def webhook():
       else:
         os.system('python3 {} {}'.format(ADD_HOST_SCRIPT, request.json['hostname']))
         # TODO: will this work without passing extra-vars?
-        os.system('ansible-playbook {} -i {}  -l {} --extra-vars "{}"'.format(ANSIBLE_PLAYBOOK_PATH, ANSIBLE_INVENTORY_PATH, request.json['hostname'], request.json['extra_vars']))
+        #os.system('ansible-playbook {} -i {}  -l {} --extra-vars "{}"'.format(ANSIBLE_PLAYBOOK_PATH, ANSIBLE_INVENTORY_PATH, request.json['hostname'], request.json['extra_vars']))
+        #os.system('ansible-playbook {} -i {}  -l {} --extra-vars "{}"'.format(configuration['ansible_playbook_path'], ANSIBLE_INVENTORY_PATH, request.json['hostname'], request.json['extra_vars']))
+        os.system('ansible-playbook {} -i {}  -l {} --extra-vars "{}"'.format(configuration['ansible_playbook_path'], configuration['ansible_inventory_path'], request.json['hostname'], request.json['extra_vars']))
         return jsonify({'status':'success'}), 200
     else:
       return jsonify({'status':'not authorized'}), 401
@@ -423,56 +425,58 @@ def webhook():
   else:
     abort(400)
 
+#print('test test test')
+#logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger()
+#_level = logging.getLevelName('DEBUG')
+#logger.setLevel(_level)
+#print(logger.getEffectiveLevel())
+#logger.setLevel(logging.getLevelName('DEBUG'))
+logger.setLevel(logging.DEBUG)
+_handler = logging.StreamHandler(getattr(sys, 'stdout'))
+_handler.setFormatter('')
+_handler.setLevel(logging.DEBUG)
+logger.addHandler(_handler)
+logger.debug('test test debug')
+logger.info('test test info')
+logger.warning('test test warn')
+logger.error('test test error')
+logger.fatal('test test fatal')
+
+# Read configuration data from file
+#configuration_data = readConfigurationFile()
+#print(configuration_data)
+
+# Read core configuration data
+#core_configuration_data = readYAML(CORE_CONFIGURATION_FILE_PATH)
+#print(core_configuration_data)
+
+# Reconcile multiple configuration sources
+#configuration = reconcileConfigurationSources(core_configuration_data, configuration_data)
+#print(configuration)
+configuration = parseConfiguration()
+print(configuration)
+
+logger.info('Rebuilding logger...')
+logger.handlers.pop()
+logger = setupLogger() or DummyObject()
+testLogger()
+
+#if AUTHENTICATION_TOKEN is None:
+#if configuration['authentication_token'] is None:
+if not 'authentication_token' in configuration.keys():
+  #print('{}_AUTHENTICATION_TOKEN has not been set in the environment.\nGenerating random token...'.format(APP_NAME.upper().replace(' ', '_')))
+  print('Authentication token has not been set.\nGenerating random token...')
+  #token = generateAuthenticationToken()
+  configuration['authentication_token'] = generateAuthenticationToken()
+  #print('Token: %s' % token)
+  print('Token: %s' % configuration['authentication_token'])
+  #AUTHENTICATION_TOKEN = token
+#if ANSIBLE_PLAYBOOK_PATH is None:
+#  raise Exception('ANSIBLE_PLAYBOOK_PATH is not defined!')
+#if ANSIBLE_INVENTORY_PATH is None:
+#  raise Exception('ANSIBLE_INVENTORY_PATH is not defined!')
+
+
 if __name__ == '__main__':
-
-  #logging.basicConfig(level=logging.DEBUG)
-  logger = logging.getLogger()
-  #_level = logging.getLevelName('DEBUG')
-  #logger.setLevel(_level)
-  #print(logger.getEffectiveLevel())
-  #logger.setLevel(logging.getLevelName('DEBUG'))
-  logger.setLevel(logging.DEBUG)
-  _handler = logging.StreamHandler(getattr(sys, 'stdout'))
-  _handler.setFormatter('')
-  _handler.setLevel(logging.DEBUG)
-  logger.addHandler(_handler)
-  logger.debug('test test debug')
-  logger.info('test test info')
-  logger.warning('test test warn')
-  logger.error('test test error')
-  logger.fatal('test test fatal')
-
-  # Read configuration data from file
-  #configuration_data = readConfigurationFile()
-  #print(configuration_data)
-
-  # Read core configuration data
-  #core_configuration_data = readYAML(CORE_CONFIGURATION_FILE_PATH)
-  #print(core_configuration_data)
-
-  # Reconcile multiple configuration sources
-  #configuration = reconcileConfigurationSources(core_configuration_data, configuration_data)
-  #print(configuration)
-  configuration = parseConfiguration()
-  print(configuration)
-
-  logger.info('Rebuilding logger...')
-  logger.handlers.pop()
-  logger = setupLogger() or DummyObject()
-  testLogger()
-
-  #if AUTHENTICATION_TOKEN is None:
-  #if configuration['authentication_token'] is None:
-  if not 'authentication_token' in configuration.keys():
-    #print('{}_AUTHENTICATION_TOKEN has not been set in the environment.\nGenerating random token...'.format(APP_NAME.upper().replace(' ', '_')))
-    print('Authentication token has not been set.\nGenerating random token...')
-    #token = generateAuthenticationToken()
-    configuration['authentication_token'] = generateAuthenticationToken()
-    #print('Token: %s' % token)
-    print('Token: %s' % configuration['authentication_token'])
-    #AUTHENTICATION_TOKEN = token
-  #if ANSIBLE_PLAYBOOK_PATH is None:
-  #  raise Exception('ANSIBLE_PLAYBOOK_PATH is not defined!')
-  #if ANSIBLE_INVENTORY_PATH is None:
-  #  raise Exception('ANSIBLE_INVENTORY_PATH is not defined!')
-  app.run()
+    app.run()
