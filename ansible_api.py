@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 
+# test
+
 import collections
 import os
 import sys
@@ -479,4 +481,4 @@ if not 'authentication_token' in configuration.keys():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

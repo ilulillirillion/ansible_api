@@ -8,7 +8,9 @@ import os
 
 
 INVENTORY_ROOT = '/etc/ansible/inventory/apple/dynamic'
-REGEX_QUERIES_FILE = '/etc/ansible/scripts/inventory_generator_v2/regex_queries.yaml'
+#REGEX_QUERIES_FILE = '/etc/ansible/scripts/inventory_generator_v2/regex_queries.yaml'
+# FIXME
+REGEX_QUERIES_FILE = '/etc/ansible/ansible_api/local/regex_queries.yaml'
 
 
 # TODO: swap argv usage for argparse
