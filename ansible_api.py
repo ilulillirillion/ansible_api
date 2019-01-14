@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
 
-# test
-
 import collections
 import os
 import sys
@@ -419,7 +417,11 @@ def webhook():
         # TODO: will this work without passing extra-vars?
         #os.system('ansible-playbook {} -i {}  -l {} --extra-vars "{}"'.format(ANSIBLE_PLAYBOOK_PATH, ANSIBLE_INVENTORY_PATH, request.json['hostname'], request.json['extra_vars']))
         #os.system('ansible-playbook {} -i {}  -l {} --extra-vars "{}"'.format(configuration['ansible_playbook_path'], ANSIBLE_INVENTORY_PATH, request.json['hostname'], request.json['extra_vars']))
-        os.system('ansible-playbook {} -i {}  -l {} --extra-vars "{}"'.format(configuration['ansible_playbook_path'], configuration['ansible_inventory_path'], request.json['hostname'], request.json['extra_vars']))
+        #os.system('ansible-playbook {} -i {}  -l {} --extra-vars "{}"'.format(configuration['ansible_playbook_path'], configuration['ansible_inventory_path'], request.json['hostname'], request.json['extra_vars']))
+
+        if 'extra_vars' not in request.json:
+          request.json['extra_vars'] = {}
+        os.system(f"ansible-playbook {configuration['ansible_playbook_path']} -i {configuration['ansible_inventory_path']} -l {request.json['hostname']} --extra-vars {request.json['extra_vars']}")
         return jsonify({'status':'success'}), 200
     else:
       return jsonify({'status':'not authorized'}), 401

@@ -2,3 +2,4 @@
 *.log
 local/*
 !local/example*
+archive
