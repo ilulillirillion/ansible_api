@@ -413,15 +413,36 @@ def webhook():
         authorized_clients.pop(client)
         return jsonify({'status':'authorization timeout'}), 401
       else:
-        os.system('python3 {} {}'.format(ADD_HOST_SCRIPT, request.json['hostname']))
+
+        # Override some configuration variables
+        if 'extra_vars' not in request.json:
+          request.json['extra_vars'] = {}
+        if 'ansible_playbook_path' not in request.json:
+          request.json['ansible_playbook_path'] = configuration['ansible_playbook_path']
+        if 'ansible_inventory_path' not in request.json:
+          request.json['ansible_inventory_path'] = configuration['ansible_inventory_path']
+        
+      
+        #os.system('python3 {} {}'.format(ADD_HOST_SCRIPT, request.json['hostname']))
+
+
+        #if not isinstance(request.json['hostnames'], str):
+        __hostnames = request.json['hostnames']
+        __hostnames = __hostnames.split(',')
+        for hostname in __hostnames:
+          print(f'Adding hostname to inventory: <{hostname}>')
+          os.system(f'python3 {ADD_HOST_SCRIPT} {hostname}')
+
+
         # TODO: will this work without passing extra-vars?
         #os.system('ansible-playbook {} -i {}  -l {} --extra-vars "{}"'.format(ANSIBLE_PLAYBOOK_PATH, ANSIBLE_INVENTORY_PATH, request.json['hostname'], request.json['extra_vars']))
         #os.system('ansible-playbook {} -i {}  -l {} --extra-vars "{}"'.format(configuration['ansible_playbook_path'], ANSIBLE_INVENTORY_PATH, request.json['hostname'], request.json['extra_vars']))
         #os.system('ansible-playbook {} -i {}  -l {} --extra-vars "{}"'.format(configuration['ansible_playbook_path'], configuration['ansible_inventory_path'], request.json['hostname'], request.json['extra_vars']))
 
-        if 'extra_vars' not in request.json:
-          request.json['extra_vars'] = {}
-        os.system(f"ansible-playbook {configuration['ansible_playbook_path']} -i {configuration['ansible_inventory_path']} -l {request.json['hostname']} --extra-vars {request.json['extra_vars']}")
+        #os.system(f"ansible-playbook {request.json['ansible_playbook_path']} -i {request.json['ansible_inventory_path']} -l {request.json['hostname']} --extra-vars {request.json['extra_vars']} -v")
+
+        #os.system(f"ansible-playbook {request.json['ansible_playbook_path']} -i {request.json['ansible_inventory_path']} -l {request.json['hostnames']}, --extra-vars {request.json['extra_vars']} -v")
+
         return jsonify({'status':'success'}), 200
     else:
       return jsonify({'status':'not authorized'}), 401
