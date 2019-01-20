@@ -23,6 +23,24 @@ CLIENT_AUTH_TIMEOUT = 24
 app = Flask(APP_NAME.lower().replace(' ', '_'))
 
 
+# NOTE: currently unused
+inline_configuration_defaults = {
+  'application_name': 'Friendly API',
+  'ordered_configuration_sources': [
+    'core',
+    'default',
+    'local'
+  ],
+  'client_authentication_timeout_hours': 24,
+  'ansible': {
+    'inventory_path': '/etc/ansible/inventory/dynamic',
+    'playbook_path': '/etc/ansible/playbooks/webook.py'
+  }
+}
+
+
+
+
 @app.route(f"/{APP_NAME.lower().replace(' ', '_')}/add_host", methods=['GET', 'POST'])
 def webhook():
 
@@ -209,8 +227,8 @@ def merge_configuration_data(data_sources):
   return configuration
 
 
-def parse_configuration():
-  configuration = merge_configuration_data(CONFIGURATION_SOURCES)
+def parse_configuration(configuration_sources):
+  configuration = merge_configuration_data(configuration_sources)
 
   if not 'authentication_token' in configuration.keys():
     print('Authentication token not detected in configuration data')
@@ -236,7 +254,8 @@ if __name__ == '__main__':
 
   # Parse configuration sources
   #configuration = parse_configuration_data(CONFIGURATION_SOURCES)
-  configuration = parse_configuration()
+  configuration = parse_configuration(CONFIGURATION_SOURCES)
 
   # TODO: parameterize debug mode
   app.run(debug=True)
+

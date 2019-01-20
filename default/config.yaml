@@ -1,2 +1,9 @@
 ---
 # file: .../ansible_api/default/config.yaml
+
+
+testkey1: 3
+testkey2: 2
+testkey5: 5
+testkeystring: string
+security_token: 5992aa0828f72860a158f88cc7f4179f3c209e2f69b084e0
