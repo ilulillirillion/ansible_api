@@ -1,5 +1,8 @@
 *.pyc
 *.log
+*.swp
 local/*
 !local/example*
 archive
+default/*
+!default/example*

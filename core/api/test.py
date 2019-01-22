@@ -3,7 +3,8 @@
 
 #from flask import Flask, jsonify
 from flask import jsonify
-from .starter import app
+#from .starter import app
+from .blueprint import app, configuration
 
 #app = Flask(__name__)
 

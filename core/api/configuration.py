@@ -26,9 +26,6 @@ def merge_recursively(*args):
 
   print(f'args: <{args}>')
 
-  #if isinstance(*args, list):
-  #  print(f'args is a list')
-      
   print(f'Instantiating empty merged_data')
   merged_data = {}
 
