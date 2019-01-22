@@ -23,6 +23,7 @@ class SecurityHandler():
         SecurityHandler.authorize_client(request.remote_addr)
         return SecurityHandler.is_authorized(request)
     else:
+      print(f'no security token passed')
       return False
 
   @staticmethod

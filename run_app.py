@@ -3,6 +3,7 @@
 
 import os
 from core.api.blueprint import app
+#from core.api.blueprint import api
 
 
 watch_directories = [ 'local', 'default' ]
@@ -21,4 +22,5 @@ for watch_directory in watch_directories:
 if __name__ == '__main__':
 
   print(f'watch files: {watch_files}')
+  #app.run(debug=True, extra_files=watch_files)
   app.run(debug=True, extra_files=watch_files)
