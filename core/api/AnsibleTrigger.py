@@ -58,7 +58,8 @@ class AnsibleTrigger(Resource):
     
     formatted_hostnames = ''
     for hostname in hostnames:
-      formatted_hostnames = formatted_hostnames + f'{hostname},'
+      #formatted_hostnames = formatted_hostnames + f'{hostname},'
+      formatted_hostnames = formatted_hostnames + '{},'.format(hostname)
     os.system(f"ansible-playbook {ansible_playbook_path} -i {ansible_inventory_path} -l {formatted_hostnames}")
 
     return jsonify({'status':'success'})
