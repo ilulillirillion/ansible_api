@@ -71,10 +71,12 @@ class AnsibleTrigger(Resource):
     for group_definition in group_definitions:
       host_already_in_group = False
       if re.compile(group_definition['regex']).match(hostname):
-        hostfile = f"{app.configuration['ansible_inventory_path']}/{group_definition['name']}.ini"
+        #hostfile = f"{app.configuration['ansible_inventory_path']}/{group_definition['name']}.ini"
+        hostfile = "{}/{}.ini".format(app.configuration['ansible_inventory_path'], group_definition['name'])
         if not os.path.exists(hostfile):
           with open(hostfile, 'a+') as f:
-            f.write(f"[{group_definition['name']}]\n")
+            #f.write(f"[{group_definition['name']}]\n")
+            f.write(f"[{}]\n".format(group_definition['name']))
         else:
           with open(hostfile, 'r') as f:
             lines = f.readlines()
@@ -84,7 +86,8 @@ class AnsibleTrigger(Resource):
 
         if not host_already_in_group:
           with open(hostfile, 'a+') as f:
-            f.write(f'{hostname}\n')
+            #f.write(f'{hostname}\n')
+            f.write('{}\n'.format(hostname))
 
   # TODO: this should be moved and imported from elsewhere
   @staticmethod
