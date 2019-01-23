@@ -60,7 +60,7 @@ class AnsibleTrigger(Resource):
       formatted_hostnames = formatted_hostnames + f'{hostname},'
     os.system(f"ansible-playbook {ansible_playbook_path} -i {ansible_inventory_path} -l {formatted_hostnames}")
 
-    return jsonify({'status':'success'}), 200
+    return jsonify({'status':'success'})
 
   @staticmethod
   def add_host_to_groups(hostname, ansible_inventory_path):
