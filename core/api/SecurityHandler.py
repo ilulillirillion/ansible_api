@@ -11,7 +11,7 @@ class SecurityHandler():
 
   @staticmethod
   def authorize_client(client_address):
-    print(f'authorizing client...')
+    print('authorizing client...')
     SecurityHandler.authorized_clients[client_address] = datetime.now()
 
   @staticmethod
@@ -23,13 +23,13 @@ class SecurityHandler():
         SecurityHandler.authorize_client(request.remote_addr)
         return SecurityHandler.is_authorized(request)
     else:
-      print(f'no security token passed')
+      print('no security token passed')
       return False
 
   @staticmethod
   def is_authorized(request):
-    print(f'checking authorization...')
-    print(f'request: <{request}>')
+    print('checking authorization...')
+    print('request: <{request}>')
     client = request.remote_addr
     if client in SecurityHandler.authorized_clients:
       if datetime.now() - SecurityHandler.authorized_clients.get(client) < timedelta(hours=SecurityHandler.client_timeout_hours):
@@ -47,6 +47,7 @@ class SecurityHandler():
       if SecurityHandler.is_authorized(request):
         return wrapped_function(*args, **kwargs)
       else:
-        print(f"redirecting since <{request.remote_addr}> wasn't authenticated.")
+        #print(f"redirecting since <{request.remote_addr}> wasn't authenticated.")
+        print("redirecting since <{}> wasn't authenticated.".format(request.remote_addr))
         return jsonify({'status':'redirected'})
     return wrap

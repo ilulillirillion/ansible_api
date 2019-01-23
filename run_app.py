@@ -11,14 +11,14 @@ for watch_directory in watch_directories:
   for dirname, dirs, files in os.walk(watch_directory):
     for filename in files:
       filename = os.path.join(dirname, filename)
-      print(f'test: {filename}')
+      print('test: {}.'format(filename))
       if not filename.endswith('.swp'):
-        print(f'file does not end with swp')
+        print('file does not end with swp')
         if os.path.isfile(filename):
           watch_files.append(filename)
 
 
 if __name__ == '__main__':
 
-  print(f'watch files: {watch_files}')
+  print('watch files: {}'.format(watch_files))
   app.run(debug=True, extra_files=watch_files)

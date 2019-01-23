@@ -52,7 +52,8 @@ class AnsibleTrigger(Resource):
     if not isinstance(hostnames, list):
       hostnames = [ hostnames ]
     for hostname in hostnames:
-      print(f'Adding <{hostname}> to inventory')
+      #print(f'Adding <{hostname}> to inventory')
+      print('Adding <{}> to inventory'.format(hostname))
       AnsibleTrigger.add_host_to_groups(hostname, ansible_inventory_path)
     
     formatted_hostnames = ''
@@ -66,9 +67,6 @@ class AnsibleTrigger(Resource):
   def add_host_to_groups(hostname, ansible_inventory_path):
     group_definitions = AnsibleTrigger.read_yaml('/etc/ansible/ansible_api/local/group_definitions.yaml')
     for group_definition in group_definitions:
-      print(f'checking definition <{group_definition}>')
-      print(f"******* group regex: {group_definition['regex']}")
-      print(f'hostname: {hostname}')
       host_already_in_group = False
       if re.compile(group_definition['regex']).match(hostname):
         hostfile = f"{app.configuration['ansible_inventory_path']}/{group_definition['name']}.ini"
