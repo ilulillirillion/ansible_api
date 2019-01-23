@@ -21,4 +21,4 @@ for watch_directory in watch_directories:
 if __name__ == '__main__':
 
   print('watch files: {}'.format(watch_files))
-  app.run(debug=True, extra_files=watch_files)
+  app.run(host='0.0.0.0',debug=True, extra_files=watch_files)
