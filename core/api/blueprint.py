@@ -9,3 +9,6 @@ from .starter import app
 
 # Add 'info' endpoint to app
 from .info import app
+
+# Add AnsibleTrigger endpoint as 'ansible'
+from .AnsibleTrigger import app

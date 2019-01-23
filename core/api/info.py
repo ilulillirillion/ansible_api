@@ -3,7 +3,7 @@
 
 from flask import jsonify
 from flask_restful import Resource
-from .blueprint import app, configuration
+from .blueprint import app
 
 
 #@app.route('/info')
@@ -16,7 +16,7 @@ class Info(Resource):
 
   @app.security_handler.authorization_required
   def get(self):
-    return jsonify(configuration)
+    return jsonify(app.configuration)
 
 
 app.api.add_resource(Info, '/info')

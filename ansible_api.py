@@ -120,6 +120,8 @@ def add_host_to_groups(hostname):
   group_definitions = read_yaml('/etc/ansible/ansible_api/local/group_definitions.yaml')
 
   for group_definition in group_definitions:
+    print(f'checking definition {group_definition}')
+    print(f"******* group regex: {group_definition['regex']}")
     
     # Instantiate a variable to tell if a host was already seen in a file
     host_already_exists = False
