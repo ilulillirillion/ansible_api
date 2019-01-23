@@ -76,7 +76,7 @@ class AnsibleTrigger(Resource):
         if not os.path.exists(hostfile):
           with open(hostfile, 'a+') as f:
             #f.write(f"[{group_definition['name']}]\n")
-            f.write(f"[{}]\n".format(group_definition['name']))
+            f.write("[{}]\n".format(group_definition['name']))
         else:
           with open(hostfile, 'r') as f:
             lines = f.readlines()
