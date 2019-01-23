@@ -11,7 +11,7 @@ for watch_directory in watch_directories:
   for dirname, dirs, files in os.walk(watch_directory):
     for filename in files:
       filename = os.path.join(dirname, filename)
-      print('test: {}.'format(filename))
+      print('test: {}'.format(filename))
       if not filename.endswith('.swp'):
         print('file does not end with swp')
         if os.path.isfile(filename):
