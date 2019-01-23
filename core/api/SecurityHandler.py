@@ -16,7 +16,7 @@ class SecurityHandler():
 
   @staticmethod
   def consider_authentication(request):
-    print(f'evaluating authentication...')
+    print('evaluating authentication...')
     if 'security_token' in request.args:
       token = request.args.get('security_token')
       if token == SecurityHandler.token:
