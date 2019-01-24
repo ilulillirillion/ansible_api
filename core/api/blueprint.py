@@ -12,3 +12,6 @@ from .info import app
 
 # Add AnsibleTrigger endpoint as 'ansible'
 from .AnsibleTrigger import app
+
+# Add user endpoint
+from .UserTest import app
